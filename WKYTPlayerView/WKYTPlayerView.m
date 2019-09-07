@@ -547,7 +547,7 @@ NSString static *const kWKYTPlayerSyndicationRegexPattern = @"^https://tpc.googl
                 NSMutableArray *levels = [[NSMutableArray alloc] init];
                 for (NSString *rawQualityValue in rawQualityValues) {
                     WKYTPlaybackQuality quality = [WKYTPlayerView playbackQualityForString:rawQualityValue];
-                    [levels addObject:[NSNumber numberWithInt:quality]];
+                    [levels addObject:[NSNumber numberWithInt:(int)quality]];
                 }
 
                 completionHandler(levels, nil);
@@ -1088,7 +1088,11 @@ NSString static *const kWKYTPlayerSyndicationRegexPattern = @"^https://tpc.googl
     configuration.userContentController = wkUController;
     
     configuration.allowsInlineMediaPlayback = YES;
-    configuration.mediaPlaybackRequiresUserAction = NO;
+    if (@available(iOS 10.0, *)) {
+        configuration.mediaTypesRequiringUserActionForPlayback = WKAudiovisualMediaTypeNone;
+    } else {
+        configuration.requiresUserActionForMediaPlayback = NO;
+    }
     
     WKWebView *webView = [[WKWebView alloc] initWithFrame:self.bounds configuration:configuration];
     webView.scrollView.scrollEnabled = NO;
