@@ -847,7 +847,7 @@ NSString static *const kWKYTPlayerSyndicationRegexPattern = @"^https://tpc.googl
     if (ytMatch || adMatch || oauthMatch || staticProxyMatch || syndicationMatch) {
         return YES;
     } else {
-        [[UIApplication sharedApplication] openURL:url];
+        [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
         return NO;
     }
 }
@@ -1091,8 +1091,10 @@ NSString static *const kWKYTPlayerSyndicationRegexPattern = @"^https://tpc.googl
     [wkUController addUserScript:wkUScript];
     
     WKWebViewConfiguration *configuration = [WKWebViewConfiguration new];
-    
     configuration.userContentController = wkUController;
+    configuration.allowsInlineMediaPlayback = YES;
+    configuration.mediaTypesRequiringUserActionForPlayback = WKAudiovisualMediaTypeNone;
+    
     
     configuration.allowsInlineMediaPlayback = YES;
     if (@available(iOS 10.0, *)) {
